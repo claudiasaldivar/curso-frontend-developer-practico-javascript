@@ -2,26 +2,31 @@ const navbarEmail = document.querySelector('.navbar-email');
 const desktopMenu = document.querySelector('.desktop-menu');
 const mobileMenu = document.querySelector('.mobile-menu');
 const menuIcon = document.querySelector('.menu');
-const productDetail = document.querySelector('.product-detail');
+const shoppingCar = document.querySelector('#shoppingCar');
 const car = document.querySelector('.navbar-shopping-cart');
+const productDetailContainer = document.querySelector('#productDetail')
+const productDetailClose = document.querySelector('.product-detail-close')
 
 navbarEmail.addEventListener('click', toggleMenu);
 menuIcon.addEventListener('click', toggleMobileMenu)
 car.addEventListener('click', toggleCar)
+productDetailClose.addEventListener('click', closeProductDetail)
 
 function toggleMenu(){
-    const aside = productDetail.classList.contains('inactive')
+    const aside = shoppingCar.classList.contains('inactive')
     if(!aside){
-        productDetail.classList.add('inactive')
+        shoppingCar.classList.add('inactive')
     }
+    
     desktopMenu.classList.toggle('inactive')
 }
 
 function toggleMobileMenu(){
-    const aside = productDetail.classList.contains('inactive')
+    const aside = shoppingCar.classList.contains('inactive')
     if(!aside){
-        productDetail.classList.add('inactive')
+        shoppingCar.classList.add('inactive')
     }
+    closeProductDetail()
     mobileMenu.classList.toggle('inactive')
 }
 
@@ -30,9 +35,23 @@ function toggleCar(){
     if(!mobileM){
         mobileMenu.classList.add('inactive')
     }
-    productDetail.classList.toggle('inactive')
+
+    const productDetail = productDetailContainer.classList.contains('inactive')
+    if(!productDetail){
+        productDetailContainer.classList.add('inactive')
+    }
+    shoppingCar.classList.toggle('inactive')
 }
 
+function openProductDetail(){
+    shoppingCar.classList.add('inactive')
+
+    productDetailContainer.classList.remove('inactive')
+}
+
+function closeProductDetail(){
+    productDetailContainer.classList.add('inactive')
+}
 
 const productlist = [];
 productlist.push({
@@ -59,53 +78,45 @@ productlist.push({
     image: "https://images.pexels.com/photos/276517/pexels-photo-276517.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940"
 })
 
-{/* <div class="product-card">
-<img src="https://images.pexels.com/photos/276517/pexels-photo-276517.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940" alt="">
-<div class="product-info">
-  <div>
-    <p>$120,00</p>
-    <p>Bike</p>
-  </div>
-  <figure>
-    <img src="./icons/bt_add_to_cart.svg" alt="">
-  </figure>
-</div>
-</div> */}
+function showProducts(arr){
+    for(product of arr){
+        const divCard = document.createElement('div')
+        divCard.classList.add('product-card')
 
-for(product of productlist){
-    const divCard = document.createElement('div')
-    divCard.classList.add('product-card')
+        const img = document.createElement('img')
+        img.setAttribute('src', product.image)
+        img.addEventListener('click', openProductDetail)
 
-    const img = document.createElement('img')
-    img.setAttribute('src', product.image)
+        const divInfo = document.createElement('div')
+        divInfo.classList.add('product-info')
 
-    const divInfo = document.createElement('div')
-    divInfo.classList.add('product-info')
+        const div = document.createElement('div')
 
-    const div = document.createElement('div')
+        const precio = document.createElement('p')
+        precio.innerText = '$',product.price
 
-    const precio = document.createElement('p')
-    precio.innerText = '$',product.price
+        const nombre = document.createElement('p')
+        precio.innerText = product.name
 
-    const nombre = document.createElement('p')
-    precio.innerText = product.name
+        const figure = document.createElement('figure')
 
-    const figure = document.createElement('figure')
+        const imgFigure = document.createElement('img')
+        imgFigure.setAttribute('src', "./icons/bt_add_to_cart.svg")
 
-    const imgFigure = document.createElement('img')
-    imgFigure.setAttribute('src', "./icons/bt_add_to_cart.svg")
+        figure.appendChild(imgFigure)
+        
+        div.appendChild(precio)
+        div.appendChild(nombre)
 
-    figure.appendChild(imgFigure)
-    
-    div.appendChild(precio)
-    div.appendChild(nombre)
+        divInfo.appendChild(div)
+        divInfo.appendChild(figure)
 
-    divInfo.appendChild(div)
-    divInfo.appendChild(figure)
+        divCard.appendChild(img)
+        divCard.appendChild(divInfo)
 
-    divCard.appendChild(img)
-    divCard.appendChild(divInfo)
-
-    const cardsContainer = document.querySelector('.cards-container')
-    cardsContainer.appendChild(divCard)
+        const cardsContainer = document.querySelector('.cards-container')
+        cardsContainer.appendChild(divCard)
+    }
 }
+
+showProducts(productlist)
